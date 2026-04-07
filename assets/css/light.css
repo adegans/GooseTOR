@@ -1,0 +1,26 @@
+:root {
+	/* Default (light) theme */
+	--bg: #eceff4;
+	--accent-bg: #e5e9f0;
+	--text: #2e3440;
+	--text-light: #585858;
+	--border: #d8dee9;
+	--accent: #5e81ac;
+	--accent-hover: #268bd2;
+	--accent-text: var(--bg);
+	--code: #d81b60;
+	--preformatted: #444;
+	--marked: #ffdd33;
+	--disabled: #efefef;
+
+	--green: #518257; /* Green */
+	--red: #c00; /* Red */
+	--yellow: #ffb900; /* Golden yellow */
+
+	--success: #518257; /* Green */
+	--success-background: #e5faee; /* Light green */
+	--warning: #db9900; /* Dark yellow */
+	--warning-background: #ffffe0; /* Yellow */
+	--error: #c00; /* Red */
+	--error-background: #ffebe8; /* Faded red */
+}

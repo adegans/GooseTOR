@@ -1,0 +1,32 @@
+:root {
+	color-scheme: dark;
+	--bg: #2e3440;
+	--accent-bg: #3b4252;
+	--text: #d8dee9;
+	--text-light: #ababab;
+	--border: #4c566a;
+	--accent: #88c0d0;
+	--accent-hover: #268bd2;
+	--accent-text: var(--bg);
+	--code: #f06292;
+	--preformatted: #ccc;
+	--marked: #ffdd33;
+	--disabled: #111;
+
+	--green: #518257; /* Green */
+	--red: #c00; /* Red */
+	--yellow: #ffb900; /* Golden yellow */
+
+	--success: #518257; /* Green */
+	--success-background: #e5faee; /* Light green */
+	--warning: #db9900; /* Dark yellow */
+	--warning-background: #ffffe0; /* Yellow */
+	--error: #c00; /* Red */
+	--error-background: #ffebe8; /* Faded red */
+}
+
+/* Add a bit of transparency so light media isn't so glaring in dark mode */
+img,
+video {
+	opacity: 0.8;
+}
