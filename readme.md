@@ -10,6 +10,7 @@ You'll need a working (localhost) server that works with PHP 8 or newer. cURL an
 - Download the [zip file](https://github.com/adegans/gooseTOR/archive/refs/heads/main.zip) from Github.
 - Extract and upload all files to your webserver, this can be in the document root or a subfolder.  
 For example https://domain.tld/goosetor/ or simply https://domain.tld/.
+- Copy `goosetor.htaccess` to `.htaccess`.
 - Copy `default-config.php` to `config.php`.
 - Open the `config.php` file and set your settings.  
 Each setting is briefly explained in the file. There are a few settings for caching, what torrent quality to look for, and you set your shared access key here.
