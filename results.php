@@ -147,12 +147,12 @@ check_config();
 				if(!empty($result['timestamp'])) $base[] = "<strong>Added on:</strong> ".date("M d, Y", $result['timestamp']);
 				if(!empty($result['mpa_rating'])) $base[] = "<strong>MPA Rating:</strong> ".$result['mpa_rating'];
 				if(!empty($result['imdb_id'])) {
-					$base[] = "<a href=\"https://www.imdb.com/title/".$result['imdb_id']."\" target=\"_blank\">IMDb page</a>";
+					$base[] = "<a href=\"https://www.imdb.com/title/".$result['imdb_id']."\" target=\"_blank\" title=\"More information on IMDb.com\">IMDb</a>";
 					if(!empty(GOOSERSS) AND !empty($result['episode'])) {
-						$base[] = "<a href=\"".GOOSERSS."/eztvrss.php?access=".GOOSERSS_ACCESS."&id=".$result['imdb_id']."\" target=\"_blank\">Subscribe in GooseRSS</a>";
+						$base[] = "<a href=\"".GOOSERSS."/subscribe.php?access=".GOOSERSS_ACCESS."&handle=".$result['imdb_id']."\" target=\"_blank\" title=\"Subscribe in GooseRSS\"><span class=\"magnet-rss\"></span></a>";
 					}
 				}
-				$base[] = "<a onclick=\"openpopup('result-".$hash."')\" title=\"Share magnet result\">Share</a>";
+				$base[] = "<a onclick=\"openpopup('result-".$hash."')\" title=\"Share magnet result\"><span class=\"magnet-share\"></span></a>";
 	
 				if(!empty($result['category'])) $meta[] = "<strong>Category:</strong> ".$result['category'];
 				if(!empty($result['year'])) $meta[] = "<strong>Year:</strong> ".$result['year'];
@@ -167,7 +167,7 @@ check_config();
 				echo "	<div class=\"description\">";
 				echo "		<p>".implode(" &bull; ", $base)."</p>";
 				echo "		<p>".implode(" &bull; ", $meta)."</p>";
-				echo "		<p><small>Found on ".replace_last_comma(implode(', ', $result['combo_source']))."</small></p>";
+				echo "		<p><small>Found on ".replace_last_comma(implode(', ', $result['combo_source'])).".</small></p>";
 				echo "	</div>";
 	
 				// Share popup

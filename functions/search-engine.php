@@ -211,15 +211,16 @@ function make_request($query, $query_filter, $boxoffice) {
 	foreach($urls as $engine => $url) {
 		// Search filters
 		$exclude = array();
-		if($query_filter['movies'] === false AND in_array($engine, $filter['movies'])) $exclude['movies'] = 1;
-		if($query_filter['shows'] === false AND in_array($engine, $filter['shows'])) $exclude['shows'] = 1;
-		if($query_filter['anime'] === false AND in_array($engine, $filter['anime'])) $exclude['anime'] = 1;
-//		if($query_filter['audio'] === false AND in_array($engine, $filter['audio'])) $exclude['audio'] = 1;
-//		if($query_filter['software'] === false AND in_array($engine, $filter['software'])) $exclude['software'] = 1;
-		if($query_filter['nsfw'] === false AND in_array($engine, $filter['nsfw'])) $exclude['nsfw'] = 1;
-
-		// Special filters
-		if(substr(strtolower($query), 0, 2) != 'tt' AND in_array($engine, $filter['imdb'])) $exclude['imdb'] = 1;
+		if(!$boxoffice) {
+			if($query_filter['movies'] === false AND in_array($engine, $filter['movies'])) $exclude['movies'] = 1;
+			if($query_filter['shows'] === false AND in_array($engine, $filter['shows'])) $exclude['shows'] = 1;
+			if($query_filter['anime'] === false AND in_array($engine, $filter['anime'])) $exclude['anime'] = 1;
+//			if($query_filter['audio'] === false AND in_array($engine, $filter['audio'])) $exclude['audio'] = 1;
+//			if($query_filter['software'] === false AND in_array($engine, $filter['software'])) $exclude['software'] = 1;
+			if($query_filter['nsfw'] === false AND in_array($engine, $filter['nsfw'])) $exclude['nsfw'] = 1;
+			// Special filters
+			if(substr(strtolower($query), 0, 2) != 'tt' AND in_array($engine, $filter['imdb'])) $exclude['imdb'] = 1;
+		}
 
 		// Maybe add engine to curl
 		if(empty($exclude)) {

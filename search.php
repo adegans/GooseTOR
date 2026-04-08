@@ -86,7 +86,7 @@ check_config();
 		<?php
 		// Load search script
 		require_once(MAIN_PATH . '/functions/search-engine.php');
-	   	$search_results = search_request('boxoffice', false, true, true);
+	   	$search_results = search_request('boxoffice', array(), true);
 	   	$search_results['boxoffice_yts'] = array_slice($search_results['boxoffice_yts'], 0, 12);
 		?>
 
