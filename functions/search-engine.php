@@ -55,7 +55,7 @@ function search_request($query, $query_filter = array(), $boxoffice = false) {
 	
 			if(!$has_error) {
 				if(!$boxoffice) {
-				    if($engine == 'yts') {
+					if($engine == 'yts') {
 						require_once(MAIN_PATH . '/engines/yts.php');
 						$items = process_yts($response['body'], $query_filter);
 					} else if($engine == "thepiratebay") {
@@ -98,6 +98,7 @@ function search_request($query, $query_filter = array(), $boxoffice = false) {
 								if($search_results['items'][$hash]['seeders'] != $item['seeders']) $search_results['items'][$hash]['combo_seeders'] += intval($item['seeders']);
 								if($search_results['items'][$hash]['leechers'] != $item['leechers']) $search_results['items'][$hash]['combo_leechers'] += intval($item['leechers']);
 		
+								// Add the source engine
 								$search_results['items'][$hash]['combo_source'][] = $item['source'];
 		
 								// If duplicate result has more info, add it
@@ -122,13 +123,13 @@ function search_request($query, $query_filter = array(), $boxoffice = false) {
 						}
 		
 						// Re-order results based on combo_seeders DESC
-				        $keys = array_column($search_results['items'], 'combo_seeders');
-				        array_multisort($keys, SORT_DESC, $search_results['items']);
+						$keys = array_column($search_results['items'], 'combo_seeders');
+						array_multisort($keys, SORT_DESC, $search_results['items']);
 	
 						if(SUCCESS_LOG) logger('PROCESSING: '.$search_results['number_of_results'].' results found for \''.$query.'\'.', false);
 					}
 				} else {
-				    if($engine == 'boxoffice_yts') {
+					if($engine == 'boxoffice_yts') {
 						require_once(MAIN_PATH . '/engines/yts.php');
 						$items = process_yts_boxoffice($response['body']);
 					} else if($engine == "boxoffice_thepiratebay") {
@@ -224,39 +225,39 @@ function make_request($query, $query_filter, $boxoffice) {
 
 		// Maybe add engine to curl
 		if(empty($exclude)) {
-		    $handle = curl_options($url);
-		    $map[(int)$handle] = $engine;
-		    
-		    curl_multi_add_handle($mh, $handle);
-		    
+			$handle = curl_options($url);
+			$map[(int)$handle] = $engine;
+			
+			curl_multi_add_handle($mh, $handle);
+			
 		}
 
-	    unset($exclude, $engine, $url);
+		unset($exclude, $engine, $url);
 	}
 
 	do {
-	    $status = curl_multi_exec($mh, $active);
-	    
-	    // Check if any handle has finished
-	    while($mhr = curl_multi_info_read($mh)) {
+		$status = curl_multi_exec($mh, $active);
+		
+		// Check if any handle has finished
+		while($mhr = curl_multi_info_read($mh)) {
 			// Find the original key associated with this handle and use it in $responses
-	        $engine = $map[(int)$mhr['handle']];
+			$engine = $map[(int)$mhr['handle']];
 
-	        $responses[$engine] = array(
-	            'code'  => curl_getinfo($mhr['handle'], CURLINFO_HTTP_CODE),
-	            'error' => curl_strerror($mhr['result']),
-	            'errno' => $mhr['result'],
-	            'body'  => trim(curl_multi_getcontent($mhr['handle']))
-	        );
+			$responses[$engine] = array(
+				'code'  => curl_getinfo($mhr['handle'], CURLINFO_HTTP_CODE),
+				'error' => curl_strerror($mhr['result']),
+				'errno' => $mhr['result'],
+				'body'  => trim(curl_multi_getcontent($mhr['handle']))
+			);
 	
-	        // Cleanup
-	        curl_multi_remove_handle($mh, $mhr['handle']);
-	        curl_close($mhr['handle']);
-	        unset($map[(int)$mhr['handle']], $engine);
-	    }
-	    
-	    if($active) curl_multi_select($mh);
-	    
+			// Cleanup
+			curl_multi_remove_handle($mh, $mhr['handle']);
+			curl_close($mhr['handle']);
+			unset($map[(int)$mhr['handle']], $engine);
+		}
+		
+		if($active) curl_multi_select($mh);
+		
 	} while ($active AND $status == CURLM_OK);
 	
 	return $responses;
@@ -268,19 +269,19 @@ function make_request($query, $query_filter, $boxoffice) {
 function curl_options($url) {
  	// Define headers
 	$headers = array(
-	    "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
-	    "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-	    "Accept-Language: en-US,en;q=0.5",
-//	    "Accept-Encoding: gzip, deflate, br, zstd",
-	    "Accept-Encoding: gzip, deflate",
-	    "Connection: keep-alive",
-	    "Upgrade-Insecure-Requests: 1",
-	    "Sec-Fetch-Dest: document",
-	    "Sec-Fetch-Mode: navigate",
-	    "Sec-Fetch-Site: none",
-	    "Sec-Fetch-User: ?1",
-	    "Priority: u=1",
-	    "Te: trailers"
+		"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+		"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+		"Accept-Language: en-US,en;q=0.5",
+//		"Accept-Encoding: gzip, deflate, br, zstd",
+		"Accept-Encoding: gzip, deflate",
+		"Connection: keep-alive",
+		"Upgrade-Insecure-Requests: 1",
+		"Sec-Fetch-Dest: document",
+		"Sec-Fetch-Mode: navigate",
+		"Sec-Fetch-Site: none",
+		"Sec-Fetch-User: ?1",
+		"Priority: u=1",
+		"Te: trailers"
 	);
 
 	$ch = curl_init();
@@ -304,6 +305,6 @@ function curl_options($url) {
 	curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_storage);
 	curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_storage);
 
-    return $ch;
+	return $ch;
 }
 ?>

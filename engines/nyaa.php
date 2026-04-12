@@ -17,10 +17,10 @@ function process_nyaa($data, $query, $query_filter) {
 	$scrape = $xpath->query("//tbody/tr");
 
 	// No results
-    if(count($scrape) == 0) {
+	if(count($scrape) == 0) {
 		if(ERROR_LOG) logger('PROCESSING: No results for Nyaa.si.');
 		return array();
-    }
+	}
 
 	$categories = nyaa_cats();
 	$units = array('TiB' => 'TB', 'GiB' => 'GB', 'MiB' => 'MB', 'KiB' => 'KB');
@@ -28,9 +28,9 @@ function process_nyaa($data, $query, $query_filter) {
 	$engine_temp = array();
 	foreach($scrape as $result) {
 		// Find data
-		$title = sanitize($xpath->evaluate("string(.//td[@colspan='2']//a[not(contains(@class, 'comments'))]/@title)", $result));
-		$magnet = sanitize($xpath->evaluate("string(.//td[@class='text-center']//a[2]/@href)", $result));
-		if(empty($magnet)) $magnet = sanitize($xpath->evaluate("string(.//td[@class='text-center']//a/@href)", $result)); // This matches if no torrent file is provided
+		$title = sanitize($xpath->evaluate("string(.//td[2]//a[not(contains(@class, 'comments'))]/@title)", $result));
+		$magnet = sanitize($xpath->evaluate("string(.//td[3]//a[2]/@href)", $result));
+		if(empty($magnet)) $magnet = sanitize($xpath->evaluate("string(.//td[3]//a/@href)", $result)); // This matches if no torrent file is provided
 
 		// Skip broken results
 		if(empty($title)) continue;
@@ -39,13 +39,13 @@ function process_nyaa($data, $query, $query_filter) {
 		parse_str(parse_url($magnet, PHP_URL_QUERY), $hash_parameters);
 		$hash = strtolower(str_replace('urn:btih:', '', $hash_parameters['xt']));
 		$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title);
-		$seeders = sanitize($xpath->evaluate("string(.//td[@class='text-center'][3])", $result));
-		$leechers = sanitize($xpath->evaluate("string(.//td[@class='text-center'][4])", $result));
-		$filesize = filesize_to_bytes(strtr(sanitize($xpath->evaluate("string(.//td[@class='text-center'][1])", $result)), $units));
+		$seeders = sanitize($xpath->evaluate("string(.//td[6])", $result));
+		$leechers = sanitize($xpath->evaluate("string(.//td[7])", $result));
+		$filesize = filesize_to_bytes(strtr(sanitize($xpath->evaluate("string(.//td[4])", $result)), $units));
 		// Get optional data
 		$verified = sanitize($xpath->evaluate("string(./@class)", $result));
 		$category = sanitize($xpath->evaluate("string(.//td[1]//a/@href)", $result));
-		$timestamp = sanitize($xpath->evaluate("string(.//td[@class='text-center']/@data-timestamp)", $result));
+		$timestamp = sanitize($xpath->evaluate("string(.//td[5]/@data-timestamp)", $result));
 
 		if(empty($seeders)) $seeders = 0;
 		if(empty($leechers)) $leechers = 0;
@@ -117,6 +117,12 @@ function process_nyaa($data, $query, $query_filter) {
 			'source' => 'Nyaa.si' // string|null
 		);
 
+		if(DEBUG) {
+			echo "<pre>";
+			print_r($engine_temp[$hash]);
+			echo "</pre>";
+		}
+
 		// Clean up
 		unset($result, $hash_parameters, $hash, $title, $magnet, $seeders, $leechers, $filesize, $verified, $quality, $codec, $audio, $timestamp, $category);
 	}
@@ -130,10 +136,10 @@ function process_nyaa_boxoffice($data) {
 	$scrape = $xpath->query("//tbody/tr[position() <= 26]");
 
 	// No results
-    if(count($scrape) == 0) {
+	if(count($scrape) == 0) {
 		if(ERROR_LOG) logger('PROCESSING: No results for Nyaa.si Boxoffice.');
 		return array();
-    }
+	}
 
 	$units = array('TiB' => 'TB', 'GiB' => 'GB', 'MiB' => 'MB', 'KiB' => 'KB');
 

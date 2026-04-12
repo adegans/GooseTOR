@@ -12,20 +12,20 @@
 if(!defined('MAIN_PATH')) die("403 - Nuh-uh!!");
 
 function process_eztv($data, $query) {
-    // Decode JSON
-    $data = json_decode($data, true);
+	// Decode JSON
+	$data = json_decode($data, true);
 
 	// Handle content errors
-    if(!is_array($data)) {
+	if(!is_array($data)) {
 		if(ERROR_LOG) logger('PROCESSING: Invalid data for YTS.');
 		return array();
-    }
+	}
 
 	// No results
-    if($data['torrents_count'] == 0) {
+	if($data['torrents_count'] == 0) {
 		if(ERROR_LOG) logger('PROCESSING: No results for YTS.');
 		return array();
-    }
+	}
 	
 	$engine_temp = array();
 	foreach($data['torrents'] as $result) {
@@ -83,6 +83,12 @@ function process_eztv($data, $query) {
 			'episode' => true, // bool
 			'source' => 'EZTV' // string|null
 		);
+
+		if(DEBUG) {
+			echo "<pre>";
+			print_r($engine_temp[$hash]);
+			echo "</pre>";
+		}
 
 		unset($result, $season, $episode, $title, $hash, $magnet, $seeders, $leechers, $filesize, $quality, $codec, $date_added);
 	}

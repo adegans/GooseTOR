@@ -12,20 +12,20 @@
 if(!defined('MAIN_PATH')) die("403 - Nuh-uh!!");
 
 function process_yts($data, $query_filter) {
-    // Decode JSON
-    $data = json_decode($data, true);
+	// Decode JSON
+	$data = json_decode($data, true);
 
 	// Handle content errors
-    if(!is_array($data)) {
+	if(!is_array($data)) {
 		if(ERROR_LOG) logger('PROCESSING: Invalid data for YTS.');
 		return array();
-    }
+	}
 
 	// No results
-    if($data['data']['movie_count'] == 0) {
+	if($data['data']['movie_count'] == 0) {
 		if(ERROR_LOG) logger('PROCESSING: No results for YTS.');
 		return array();
-    }
+	}
 	
 	$engine_temp = array();
 	foreach($data['data']['movies'] as $result) {
@@ -94,8 +94,16 @@ function process_yts($data, $query_filter) {
 				'episode' => false, // bool
 				'source' => 'YTS' // string|null
 			);
+
+			if(DEBUG) {
+				echo "<pre>";
+				print_r($engine_temp[$hash]);
+				echo "</pre>";
+			}
+
 			unset($download, $hash, $magnet, $seeders, $leechers, $filesize, $imdb_id, $quality, $codec, $bitrate, $type, $audio);
 		}
+
 		unset($data, $result, $title, $year, $category, $language, $runtime, $timestamp, $mpa_rating);
 	}
 	
@@ -103,20 +111,20 @@ function process_yts($data, $query_filter) {
 }
 
 function process_yts_boxoffice($data) {
-    // Decode JSON
-    $data = json_decode($data, true);
+	// Decode JSON
+	$data = json_decode($data, true);
 
 	// Handle content errors
-    if(!is_array($data)) {
+	if(!is_array($data)) {
 		if(ERROR_LOG) logger('PROCESSING: Invalid data for YTS Boxoffice.');
 		return array();
-    }
+	}
 
 	// No results
-    if($data['data']['movie_count'] == 0) {
+	if($data['data']['movie_count'] == 0) {
 		if(ERROR_LOG) logger('PROCESSING: No results for YTS Boxoffice.');
 		return array();
-    }
+	}
 	
 	$engine_temp = array();
 	foreach($data['data']['movies'] as $result) {

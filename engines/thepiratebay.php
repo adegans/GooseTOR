@@ -12,20 +12,20 @@
 if(!defined('MAIN_PATH')) die("403 - Nuh-uh!!");
 
 function process_thepiratebay($data, $query, $query_filter) {
-    // Decode JSON
+	// Decode JSON
 	$data = json_decode($data, true);
 
 	// Handle content errors
-    if(!is_array($data)) {
+	if(!is_array($data)) {
 		if(ERROR_LOG) logger('PROCESSING: Invalid data for The Pirate Bay.');
 		return array();
-    }
+	}
 
 	// No results
-    if($data[0]['name'] == 'No results returned') {
+	if($data[0]['name'] == 'No results returned') {
 		if(ERROR_LOG) logger('PROCESSING: No results for The Pirate Bay.');
 		return array();
-    }
+	}
 
 	$categories = tpb_cats();
 
@@ -103,7 +103,13 @@ function process_thepiratebay($data, $query, $query_filter) {
 			'mpa_rating' => null, // string|null
 			'episode' => (bool)$tvshow, // bool
 			'source' => 'ThePirateBay' // string|null
-			);
+		);
+
+		if(DEBUG) {
+			echo "<pre>";
+			print_r($engine_temp[$hash]);
+			echo "</pre>";
+		}
 
 		unset($data, $result, $hash, $title, $magnet, $seeders, $leechers, $filesize, $verified, $nsfw, $quality, $codec, $audio, $timestamp, $category, $imdb_id, $tvshow);
 	}
@@ -112,20 +118,20 @@ function process_thepiratebay($data, $query, $query_filter) {
 }
 
 function process_thepiratebay_boxoffice($data) {
-    // Decode JSON
+	// Decode JSON
 	$data = json_decode($data, true);
 
 	// Handle content errors
-    if(!is_array($data)) {
+	if(!is_array($data)) {
 		if(ERROR_LOG) logger('PROCESSING: Invalid data for The Pirate Bay Boxoffice.');
 		return array();
-    }
+	}
 
 	// No results
-    if($data[0]['name'] == 'No results returned') {
+	if($data[0]['name'] == 'No results returned') {
 		if(ERROR_LOG) logger('PROCESSING: No results for The Pirate Bay Boxoffice.');
 		return array();
-    }
+	}
 
 	$categories = tpb_cats();
 

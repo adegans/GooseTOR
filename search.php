@@ -35,12 +35,12 @@ check_config();
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>GooseTOR Search</title>
+	<title>GooseTOR Search</title>
 
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<meta name="robots" content="noodp,noydir" />
-    <meta name="referrer" content="no-referrer"/>
+	<meta name="referrer" content="no-referrer"/>
 	<meta name="description" content="Get your GooseTOR on! - The best meta search engine for private and fast torrent searches!" />
 
 	<meta property="og:site_name" content="GooseTOR Search" />
@@ -53,9 +53,9 @@ check_config();
 	<link rel="icon" href="favicon.ico" />
 	<link rel="apple-touch-icon" href="apple-touch-icon.png" />
 	<link rel="canonical" href="<?php echo MAIN_URL; ?>" />
-    <link rel="stylesheet" type="text/css" href="<?php echo MAIN_URL; ?>/assets/css/simple.css"/>
-    <link rel="stylesheet" type="text/css" href="<?php echo MAIN_URL; ?>/assets/css/<?php echo $colorscheme; ?>.css"/>
-    <link rel="stylesheet" type="text/css" href="<?php echo MAIN_URL; ?>/assets/css/grid.css"/>
+	<link rel="stylesheet" type="text/css" href="<?php echo MAIN_URL; ?>/assets/css/simple.css"/>
+	<link rel="stylesheet" type="text/css" href="<?php echo MAIN_URL; ?>/assets/css/<?php echo $colorscheme; ?>.css"/>
+	<link rel="stylesheet" type="text/css" href="<?php echo MAIN_URL; ?>/assets/css/grid.css"/>
 
 	<script src="<?php echo MAIN_URL;?>/assets/js/goose.js" id="goosebox-js"></script>
 </head>
@@ -109,7 +109,7 @@ check_config();
 			}
 			unset($search_results);
 			?>
-	    </div>
+		</div>
 	</section>
 </main>
 

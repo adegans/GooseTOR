@@ -60,7 +60,7 @@ check_config();
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<meta name="robots" content="noodp,noydir" />
-    <meta name="referrer" content="no-referrer"/>
+	<meta name="referrer" content="no-referrer"/>
 	<meta name="description" content="Check out these GooseTOR search results!" />
 
 	<meta property="og:site_name" content="GooseTOR Search" />
@@ -73,9 +73,9 @@ check_config();
 	<link rel="icon" href="favicon.ico" />
 	<link rel="apple-touch-icon" href="apple-touch-icon.png" />
 	<link rel="canonical" href="<?php echo MAIN_URL; ?>/results.php" />
-    <link rel="stylesheet" type="text/css" href="<?php echo MAIN_URL; ?>/assets/css/simple.css"/>
-    <link rel="stylesheet" type="text/css" href="<?php echo MAIN_URL; ?>/assets/css/<?php echo $colorscheme; ?>.css"/>
-    <link rel="stylesheet" type="text/css" href="<?php echo MAIN_URL; ?>/assets/css/grid.css"/>
+	<link rel="stylesheet" type="text/css" href="<?php echo MAIN_URL; ?>/assets/css/simple.css"/>
+	<link rel="stylesheet" type="text/css" href="<?php echo MAIN_URL; ?>/assets/css/<?php echo $colorscheme; ?>.css"/>
+	<link rel="stylesheet" type="text/css" href="<?php echo MAIN_URL; ?>/assets/css/grid.css"/>
 
 	<script src="<?php echo MAIN_URL;?>/assets/js/goose.js" id="goosebox-js"></script>
 </head>
@@ -102,7 +102,7 @@ check_config();
 
 	<nav>
 		<ul>
-	    	<li><a class="tab-home" href="<?php echo MAIN_URL; ?>/search.php?access=<?php echo $access_key; ?>&c=<?php echo $colorscheme;?>">Home</a></li>
+			<li><a class="tab-home" href="<?php echo MAIN_URL; ?>/search.php?access=<?php echo $access_key; ?>&c=<?php echo $colorscheme;?>">Home</a></li>
 			<li><a class="tab-boxoffice" href="<?php echo MAIN_URL; ?>/boxoffice.php?access=<?php echo $access_key; ?>&c=<?php echo $colorscheme;?>">Box Office</a></li>
 		</ul>
 	</nav>
@@ -115,7 +115,7 @@ check_config();
 
 		// Load search script
 		require_once(MAIN_PATH . '/functions/search-engine.php');
-       	$search_results = search_request($query, $query_filter);
+	   	$search_results = search_request($query, $query_filter);
 
 		// Add elapsed time to results
 		$search_results['time'] = number_format(microtime(true) - $start_time, 5, '.', '');
@@ -216,20 +216,20 @@ check_config();
 			echo "	<p><a class=\"button\" onclick=\"closepopup()\">Close</a></p>";
 			echo "</dialog>";
 		} else {
-		    echo "<section id=\"no-results\">";
+			echo "<section id=\"no-results\">";
 			echo "  <h3>No results!</h3>";
 			echo "  <p>Whoops! Nothing was found for query '".$query."' Try another search.</p>";
-	        echo "</section>";
+			echo "</section>";
 		}
 
 		// Something went wrong
-	    if(!empty($search_results['error'])) {
-		    echo "<section id=\"errors\">";
-	        foreach($search_results['error'] as $error) {
-	        	echo "<p class=\"error\">".$error."</p>";
-	        }
-	        echo "</section>";
-	    }
+		if(!empty($search_results['error'])) {
+			echo "<section id=\"errors\">";
+			foreach($search_results['error'] as $error) {
+				echo "<p class=\"error\">".$error."</p>";
+			}
+			echo "</section>";
+		}
 
 	} else {
 		echo "<section class=\"warning\">";

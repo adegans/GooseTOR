@@ -86,7 +86,7 @@ function cache_delete($folder) {
 	
 	if($timer < $cache_ttl) {
 		if(is_dir($folder) AND $handle = opendir($folder)) {
-	        while(($file = readdir($handle)) !== false) {
+			while(($file = readdir($handle)) !== false) {
 				// Only delete .cache files
 				if($file == '.' OR $file == '..' OR substr($file, -6) != '.cache') {
 					continue;
@@ -98,10 +98,10 @@ function cache_delete($folder) {
 
 					if(SUCCESS_LOG) logger('CACHE: Deleted file ' . $file . '.', false);
 				}
-	        }
+			}
 			
-	        closedir($handle);
-	    }
+			closedir($handle);
+		}
 
 		@file_put_contents($timerfile, $now);
 	}
@@ -138,14 +138,14 @@ function sanitize($variable, $keep_newlines = false) {
 		break;
 	}
 
-    return $variable;
+	return $variable;
 }
 
 // Convert a number to bytes (filesize)
 function filesize_to_bytes($num) {
 	if(empty($num)) return 0;
 
-    preg_match('/(b|kb|mb|gb|tb|pb|eb|zb|yb)/', strtolower($num), $match);
+	preg_match('/(b|kb|mb|gb|tb|pb|eb|zb|yb)/', strtolower($num), $match);
 	$num = floatval(preg_replace('/[^0-9.]+/', '', $num));
 	$match = $match[0];
 
@@ -174,10 +174,10 @@ function filesize_to_bytes($num) {
 
 // Make a human readable formatted file size
 function human_filesize($bytes, $dec = 2) {
-    $size = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
-    $factor = floor((strlen($bytes) - 1) / 3);
+	$size = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+	$factor = floor((strlen($bytes) - 1) / 3);
 
-    return sprintf("%.{$dec}f ", $bytes / pow(1024, $factor)) . @$size[$factor];
+	return sprintf("%.{$dec}f ", $bytes / pow(1024, $factor)) . @$size[$factor];
 }
 
 // Make a human readable formatted time indicator
@@ -357,7 +357,7 @@ function is_tvshow($result_query) {
 		return true;
 	}
 
-    return false;
+	return false;
 }
 
 // Determine if a TV Show Episode is the one you specifically searched
@@ -370,17 +370,17 @@ function is_season_or_episode($search_query, $result_query) {
 		}
 	}
 
-    return true;
+	return true;
 }
 
 // Remove the last comma from a string with 'and'
 function replace_last_comma($string) {
-    $last_comma = strrpos($string, ', ');
-    if($last_comma !== false) {
-        $string = substr_replace($string, ' and ', $last_comma, 2);
-    }
+	$last_comma = strrpos($string, ', ');
+	if($last_comma !== false) {
+		$string = substr_replace($string, ' and ', $last_comma, 2);
+	}
 
-    return $string;
+	return $string;
 }
 
 // Format the star rating (Usually IMDb rating)

@@ -47,7 +47,9 @@ define('CACHE_TTL', 28800); // Default: 28800 (8 hours).
 
 // Log runs per feed into error.log or success.log?
 // Leaving this on may result in large log files over time. Deleting either log file 'resets' the log.
+// Enable debug to output search results as plain arrays so you can test/see what data GooseTOR finds during processing.
 // Set to true or false.
 define('SUCCESS_LOG', false); // default: false
 define('ERROR_LOG', false); // default: false
+define('DEBUG', false); // default: false
 ?>

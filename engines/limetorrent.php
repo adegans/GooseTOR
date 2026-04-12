@@ -17,10 +17,10 @@ function process_limetorrent($data, $query, $query_filter) {
 	$scrape = $xpath->query("//table[@class='table2']//tr[position() > 1]");
 
 	// No results
-    if(count($scrape) == 0) {
+	if(count($scrape) == 0) {
 		if(ERROR_LOG) logger('PROCESSING: No results for LimeTorrents.');
 		return array();
-    }
+	}
 
 	$categories = lime_cats();
 
@@ -116,6 +116,12 @@ function process_limetorrent($data, $query, $query_filter) {
 			'episode' => (bool)$tvshow, // bool
 			'source' => 'LimeTorrents' // string|null
 		);
+
+		if(DEBUG) {
+			echo "<pre>";
+			print_r($engine_temp[$hash]);
+			echo "</pre>";
+		}
 
 		unset($result, $hash, $title, $magnet, $seeders, $leechers, $filesize, $verified, $nsfw, $quality, $codec, $audio, $category, $tvshow);
 	}

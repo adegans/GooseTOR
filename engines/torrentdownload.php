@@ -17,10 +17,12 @@ function process_torrentdownload($data, $query, $query_filter) {
 	$scrape = $xpath->query("//table[2]//tr");
 
 	// No results
-    if(count($scrape) == 0) {
+	if(count($scrape) == 0) {
 		if(ERROR_LOG) logger('PROCESSING: No results for Torrentdownload.');
 		return array();
-    }
+	}
+
+	$units = array('TiB' => 'TB', 'GiB' => 'GB', 'MiB' => 'MB', 'KiB' => 'KB');
 
 	$engine_temp = array();
 	foreach($scrape as $result) {
@@ -32,22 +34,32 @@ function process_torrentdownload($data, $query, $query_filter) {
 		$meta = sanitize($xpath->evaluate("string(.//td[1]/div[@class='tt-name']/a/@href)", $result));
 		$meta = explode('/', $meta); // [0] should be empty, [1] = hash, [2] = encoded title/name
 		$hash = $meta[1];
+
+		// Skip broken results
+		if(empty($title)) continue;
+		if(empty($hash)) continue;
+
 		$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title);
 		$seeders = sanitize($xpath->evaluate("string(.//td[4])", $result));
 		$leechers = sanitize($xpath->evaluate("string(.//td[5])", $result));
-		$filesize = sanitize($xpath->evaluate("string(.//td[3])", $result));
+		$filesize = filesize_to_bytes(strtr(sanitize($xpath->evaluate("string(.//td[3])", $result)), $units));
+		// Find optional data
+		$category = sanitize($xpath->evaluate("string(.//td[1]/div[@class='tt-name']/span)", $result));
+
+		if(empty($seeders)) $seeders = 0;
+		if(empty($leechers)) $leechers = 0;
+		if(empty($filesize)) $filesize = 0;
 
 		// Ignore results with 0 seeders?
 		if(SKIP_NO_SEEDERS === true AND $seeders == 0) continue;
 
-		// Find optional data
-		$category = sanitize($xpath->evaluate("string(.//td[1]/div[@class='tt-name']/span)", $result));
 		$tvshow = is_tvshow($title);
 		$nsfw = (detect_nsfw($title)) ? true : false;
 
 		if($tvshow === true AND !is_season_or_episode($query, $title)) continue;
 		if($query_filter['nsfw'] === false AND $nsfw === true) continue;
 		
+		$category = (strlen($category) > 0) ? preg_replace('/[^a-zA-Z\s-]/', '', sanitize($category)) : null;
 		if(!is_null($category)) {
 			// Maybe block these categories
 			if($query_filter['movies'] === false AND $category == 'Movies') continue;
@@ -70,6 +82,7 @@ function process_torrentdownload($data, $query, $query_filter) {
 			}
 		}
 		
+		// Done, add it to the results
 		$engine_temp[$hash] = array (
 			// Required
 			'title' => (string)$title, // string
@@ -93,6 +106,12 @@ function process_torrentdownload($data, $query, $query_filter) {
 			'episode' => (bool)$tvshow, // bool
 			'source' => 'Torrentdownload' // string|null
 		);
+
+		if(DEBUG) {
+			echo "<pre>";
+			print_r($engine_temp[$hash]);
+			echo "</pre>";
+		}
 
 		// Clean up
 		unset($result, $meta, $hash_parameters, $hash, $title, $magnet, $seeders, $leechers, $filesize, $verified, $quality, $codec, $audio, $timestamp, $category);
