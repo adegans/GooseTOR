@@ -87,7 +87,7 @@ function process_limetorrent($data, $query, $query_filter) {
 			}
 
 			// Set actual category
-			$category = $categories[$category];
+			$category = (isset($categories[$category])) ? $categories[$category] : null;
 		} else {
 			$category = null;
 		}
@@ -101,19 +101,19 @@ function process_limetorrent($data, $query, $query_filter) {
 			'leechers' => (int)$leechers, // int
 			'filesize' => (int)$filesize, // int
 			// Optional
-			'verified_uploader' => (string)$verified, // string|null
-			'nsfw' => (bool)$nsfw, // bool
-			'quality' => (string)$quality, // string|null
+			'verified_uploader' => $verified, // string|null
+			'nsfw' => $nsfw, // bool
+			'quality' => $quality, // string|null
 			'type' => null, // string|null
-			'audio' => (string)$audio, // string|null
+			'audio' => $audio, // string|null
 			'runtime' => null, // int(timestamp)|null
 			'year' => null, // int(4)|null
 			'timestamp' => null, // int(timestamp)|null
-			'category' => (string)$category, // string|null
+			'category' => $category, // string|null
 			'imdb_id' => null, // string|null
 			'mpa_rating' => null, // string|null
 			'language' => null, // string|null
-			'episode' => (bool)$tvshow, // bool
+			'episode' => $tvshow, // bool
 			'source' => 'LimeTorrents' // string|null
 		);
 

@@ -149,7 +149,7 @@ check_config();
 				if(!empty($result['imdb_id'])) {
 					$base[] = "<a href=\"https://www.imdb.com/title/".$result['imdb_id']."\" target=\"_blank\" title=\"More information on IMDb.com\">IMDb</a>";
 					if(!empty(GOOSERSS) AND !empty($result['episode'])) {
-						$base[] = "<a href=\"".GOOSERSS."/subscribe.php?access=".GOOSERSS_ACCESS."&handle=".$result['imdb_id']."\" target=\"_blank\" title=\"Subscribe in GooseRSS\"><span class=\"magnet-rss\"></span></a>";
+						$base[] = "<a href=\"".GOOSERSS."/subscribe.php?access=".GOOSERSS_ACCESS."&handle=".$result['imdb_id']."\" title=\"Subscribe in GooseRSS\"><span class=\"magnet-rss\"></span></a>";
 					}
 				}
 				$base[] = "<a onclick=\"openpopup('result-".$hash."')\" title=\"Share magnet result\"><span class=\"magnet-share\"></span></a>";
@@ -163,7 +163,12 @@ check_config();
 	
 				// Put result together
 				echo "<article class=\"result magnet id-".$hash."\">";
-				echo "	<h2><a href=\"".$result['magnet']."\">".stripslashes($result['title'])."</a></h2>";
+				if(!empty(TRANSMISSION_WEB)) {
+					echo "	<h2><a href=\"".MAIN_URL."/transmission.php?access=".$access_key."&hash=".$hash."\" target=\"_blank\" title=\"Add to Transmission Web\">".stripslashes($result['title'])."</a></h2>";
+					echo "	<h3>Add to local app: <a href=\"".$result['magnet']."\" title=\"Add magnet to Torrent App\">".stripslashes($result['title'])."</a></h3>";
+				} else {
+					echo "	<h2><a href=\"".$result['magnet']."\" title=\"Add magnet to Torrent App\">".stripslashes($result['title'])."</a></h2>";
+				}
 				echo "	<div class=\"description\">";
 				echo "		<p>".implode(" &bull; ", $base)."</p>";
 				echo "		<p>".implode(" &bull; ", $meta)."</p>";
@@ -176,7 +181,7 @@ check_config();
 				echo "		<p>Tap or click on the field below to copy the magnet link to your clipboard.</p>";
 				echo "		<h3>".stripslashes($result['title'])."</h3>";
 				echo "		<p><input tabindex=\"2\" type=\"text\" id=\"share-result-".$hash."\" class=\"share-field\" value=\"".$result['magnet']."\" /><button tabindex=\"1\" class=\"share-button\" onclick=\"clipboard('share-result-".$hash."')\">Copy magnet link</button></p>";
-				echo "		<p><a class=\"close-button\" onclick=\"closepopup()\">Close</a> <span id=\"share-result-".$hash."-response\"></span></p>";
+				echo "		<p><button class=\"close-button\" onclick=\"closepopup()\">Close</button> <span id=\"share-result-".$hash."-response\"></span></p>";
 				echo "	</dialog>";
 	
 				echo "</article>";

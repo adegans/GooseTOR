@@ -70,14 +70,14 @@ function process_eztv($data, $query) {
 			// Optional
 			'verified_uploader' => 'yes', // string|null
 			'nsfw' => false, // bool
-			'quality' => (string)$quality, // string|null
+			'quality' => $quality, // string|null
 			'type' => null, // string|null
-			'audio' => (string)$audio, // string|null
+			'audio' => $audio, // string|null
 			'runtime' => null, // int(timestamp)|null
 			'year' => null, // int(4)|null
-			'timestamp' => (int)$timestamp, // int(timestamp)|null
+			'timestamp' => $timestamp, // int(timestamp)|null
 			'category' => null, // string|null
-			'imdb_id' => (string)$imdb_id, // string|null
+			'imdb_id' => $imdb_id, // string|null
 			'mpa_rating' => null, // string|null
 			'language' => null, // string|null
 			'episode' => true, // bool

@@ -31,13 +31,19 @@ define('TPB_CATEGORIES', array(206, 210)); // Default: 206, 210 (Comma separated
 // Ignore torrents with 0 (zero) seeders?
 define('SKIP_NO_SEEDERS', true); // default: true
 
-// Do you use GooseRSS? 
-// If you do and want to be able to subscribe to TV shows directly from GooseTOR, enter the MAIN_URL and ACCESS value from your GooseRSS config.php.
-// GooseTOR will try to detect TV Show episide and pre-generate RSS urls to subscribe to. The show must be available on EZTV for the RSS feed to work.
-// Keep in mind that you'll be indirectly sharing your ACCESS secret with whoever uses GooseTOR!
+// If you do and want to be able to subscribe to TV shows in GooseRSS directly from GooseTOR, enter the MAIN_URL and ACCESS value from your GooseRSS config.php.
+// GooseTOR will try to detect TV Shows and show a link to GooseRSS so you can subscribe for updates. The show must be available on EZTV for the RSS feed to work.
+// Keep in mind that you'll be indirectly sharing your GooseRSS ACCESS secret with whoever uses GooseTOR!
 // If you don't want this feature, set both values to false.
 define('GOOSERSS', 'https://example.com/gooserss');
 define('GOOSERSS_ACCESS', '1234-2468-1357');
+
+// If you have Transmission Web enabled on a computer (server) elsewhere on your network, enter the basic url below, including the port number.
+// Example: http://192.168.0.10:9091 or http://computer.local:9091
+// Transmission web uses the Authorization header with 'basic' auth. Your username and password will be used for that, which will be base64 encoded.
+// If you don't want this feature, set both values to false.
+define('TRANSMISSION_WEB', 'http://computer.local:9091');
+define('TRANSMISSION_ACCESS', 'username:password');
 
 // Where to keep the cache (without a trailing slash).
 define('CACHE_DIR', '/cache'); // default: /cache

@@ -81,16 +81,16 @@ function process_yts($data, $query_filter) {
 				// Optional
 				'verified_uploader' => 'yes', // string|null
 				'nsfw' => false, // bool
-				'quality' => (string)$quality, // string|null
-				'type' => (string)$type, // string|null
-				'audio' => (string)$audio, // string|null
-				'runtime' => (int)$runtime, // int(timestamp)|null
-				'year' => (int)$year, // int(4)|null
-				'timestamp' => (int)$timestamp, // int(timestamp)|null
-				'category' => (string)$category, // string|null
-				'imdb_id' => (string)$imdb_id, // string|null
-				'mpa_rating' => (string)$mpa_rating, // string|null
-				'language' => (string)$language, // string|null
+				'quality' => $quality, // string|null
+				'type' => $type, // string|null
+				'audio' => $audio, // string|null
+				'runtime' => $runtime, // int(timestamp)|null
+				'year' => $year, // int(4)|null
+				'timestamp' => $timestamp, // int(timestamp)|null
+				'category' => $category, // string|null
+				'imdb_id' => $imdb_id, // string|null
+				'mpa_rating' => $mpa_rating, // string|null
+				'language' => $language, // string|null
 				'episode' => false, // bool
 				'source' => 'YTS' // string|null
 			);

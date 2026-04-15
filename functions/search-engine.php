@@ -12,9 +12,11 @@
 
 if(!defined('MAIN_PATH')) die("403 - Nuh-uh!!");
 
-function search_request($query, $query_filter = array(), $boxoffice = false) {
+function search_request($query, $query_filter = array()) {
 	$now = time();
 	$check_interval = $now - CACHE_TTL;
+	
+	$boxoffice = ($query === "boxoffice_page_boxoffice") ? true : false;
 	
 	// Fetch from cache or find new results
 	$cache_key = md5($query.serialize($query_filter));
@@ -261,50 +263,5 @@ function make_request($query, $query_filter, $boxoffice) {
 	} while ($active AND $status == CURLM_OK);
 	
 	return $responses;
-}
-
-/* ------------------------------------------------------------------------ */
-/* SET CURL OPTIONS FOR EACH REQUEST/HANDLE									*/
-/* ------------------------------------------------------------------------ */
-function curl_options($url) {
- 	// Define headers
-	$headers = array(
-		"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
-		"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-		"Accept-Language: en-US,en;q=0.5",
-//		"Accept-Encoding: gzip, deflate, br, zstd",
-		"Accept-Encoding: gzip, deflate",
-		"Connection: keep-alive",
-		"Upgrade-Insecure-Requests: 1",
-		"Sec-Fetch-Dest: document",
-		"Sec-Fetch-Mode: navigate",
-		"Sec-Fetch-Site: none",
-		"Sec-Fetch-User: ?1",
-		"Priority: u=1",
-		"Te: trailers"
-	);
-
-	$ch = curl_init();
-
-	curl_setopt($ch, CURLOPT_URL, $url);
-	curl_setopt($ch, CURLOPT_HTTPGET, 1); // Redundant? Probably...
-	curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS | CURLPROTO_HTTP);
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-//	curl_setopt($ch, CURLOPT_ENCODING, 'gzip,deflate');
-	curl_setopt($ch, CURLOPT_ENCODING, ""); // Done through headers
-	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-	curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-	curl_setopt($ch, CURLOPT_MAXREDIRS, 5);
-	curl_setopt($ch, CURLOPT_REDIR_PROTOCOLS, CURLPROTO_HTTPS | CURLPROTO_HTTP);
-	curl_setopt($ch, CURLOPT_TIMEOUT, 2);
-	curl_setopt($ch, CURLOPT_VERBOSE, false);
-	// Do some cookies
-	$cookie_storage = MAIN_PATH . CACHE_DIR . '/sessions.cookie';
-	curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_storage);
-	curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_storage);
-
-	return $ch;
 }
 ?>

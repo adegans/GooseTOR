@@ -28,6 +28,7 @@ if(empty($access_key) OR $access_key !== trim(ACCESS)) {
 // Process url arguments
 $query = isset($_GET['q']) ? sanitize($_GET['q']) : '';
 $colorscheme = (isset($_GET['c']) AND $_GET['c'] === 'dark') ? 'dark' : 'light';
+$target_blank = (!empty(TRANSMISSION_WEB)) ? " target=\"_blank\"" : "";
 
 // Make sure certain files and folders exist and clean up cache
 check_config();
@@ -94,7 +95,7 @@ check_config();
 	<?php
 	// Load search script
 	require_once(MAIN_PATH . '/functions/search-engine.php');
-   	$search_results = search_request('boxoffice', false, true);
+   	$search_results = search_request('boxoffice_page_boxoffice', false);
 	?>
 
 	<h2>The Box Office</h2>
@@ -128,8 +129,10 @@ check_config();
 			<ol>
 			<?php
 			foreach($search_results['boxoffice_thepiratebay'] as $highlight) {
+				$magnet_link = (!empty(TRANSMISSION_WEB)) ? "window.open('".MAIN_URL."/transmission.php?access=".ACCESS."&hash=".$highlight['hash']."', '_blank');" : "location.href='".$highlight['magnet']."'";
+
 				echo "<li class=\"result tpb id-".$highlight['id']."\">";
-				echo "	<h2><a href=\"".$highlight['magnet']."\">".stripslashes($highlight['name'])."</a></h2>";
+				echo "	<h2><a onclick=\"".$magnet_link."\">".stripslashes($highlight['name'])."</a></h2>";
 				echo "	<div class=\"description\"><strong>Seeds:</strong> <span class=\"green\">".$highlight['seeders']."</span> - <strong>Peers:</strong> <span class=\"red\">".$highlight['leechers']."</span> - <strong>Size:</strong> ".human_filesize($highlight['filesize'])."<br /><strong>Category:</strong> ".$highlight['category']."</div>";
 				echo "</li>";
 	
@@ -144,8 +147,10 @@ check_config();
 			<ol>
 			<?php
 			foreach($search_results['boxoffice_nyaa'] as $highlight) {
+				$magnet_link = (!empty(TRANSMISSION_WEB)) ? "window.open('".MAIN_URL."/transmission.php?access=".ACCESS."&hash=".$highlight['hash']."', '_blank');" : "location.href='".$highlight['magnet']."'";
+
 				echo "<li class=\"result nyaa id-".$highlight['id']."\">";
-				echo "	<h2><a href=\"".$highlight['magnet']."\">".stripslashes($highlight['name'])."</a></h2>";
+				echo "	<h2><a onclick=\"".$magnet_link."\">".stripslashes($highlight['name'])."</a></h2>";
 				echo "	<div class=\"description\"><strong>Seeds:</strong> <span class=\"green\">".$highlight['seeders']."</span> - <strong>Peers:</strong> <span class=\"red\">".$highlight['leechers']."</span> - <strong>Size:</strong> ".human_filesize($highlight['filesize'])."<br /><strong>Category:</strong> ".$highlight['category']."</div>";
 				echo "</li>";
 	

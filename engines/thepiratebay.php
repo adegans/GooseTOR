@@ -90,18 +90,18 @@ function process_thepiratebay($data, $query, $query_filter) {
 			'filesize' => (int)$filesize, // int
 			// Optional
 			'verified_uploader' => $verified, // string|null
-			'nsfw' => (bool)$nsfw, // bool
-			'quality' => (string)$quality, // string|null
+			'nsfw' => $nsfw, // bool
+			'quality' => $quality, // string|null
 			'type' => null, // string|null
-			'audio' => (string)$audio, // string|null
+			'audio' => $audio, // string|null
 			'runtime' => null, // int(timestamp)|null
 			'year' => null, // int(4)|null
-			'timestamp' => (int)$timestamp, // int(timestamp)|null
-			'category' => (string)$category, // string|null
-			'imdb_id' => (string)$imdb_id, // string|null
+			'timestamp' => $timestamp, // int(timestamp)|null
+			'category' => $category, // string|null
+			'imdb_id' => $imdb_id, // string|null
 			'language' => null, // string|null
 			'mpa_rating' => null, // string|null
-			'episode' => (bool)$tvshow, // bool
+			'episode' => $tvshow, // bool
 			'source' => 'ThePirateBay' // string|null
 		);
 
@@ -159,6 +159,7 @@ function process_thepiratebay_boxoffice($data) {
 		$engine_temp[] = array(
 			'id' => (string)$result_id, // Semi random string to separate results
 			'name' => (string)$title, // string
+			'hash' => (string)$hash, // string
 			'magnet' => (string)$magnet, // string
 			'seeders' => (int)$seeders, // int
 			'leechers' => (int)$leechers, // int

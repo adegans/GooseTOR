@@ -93,17 +93,17 @@ function process_torrentdownload($data, $query, $query_filter) {
 			// Optional
 			'verified_uploader' => null, // string|null
 			'nsfw' => false, // bool
-			'quality' => (string)$quality, // string|null
+			'quality' => $quality, // string|null
 			'type' => null, // string|null
-			'audio' => (string)$audio, // string|null
+			'audio' => $audio, // string|null
 			'runtime' => null, // int(timestamp)|null
 			'year' => null, // int(4)|null
 			'timestamp' => null, // int(timestamp)|null
-			'category' => (string)$category, // string|null
+			'category' => $category, // string|null
 			'imdb_id' => null, // string|null
 			'mpa_rating' => null, // string|null
 			'language' => null, // string|null
-			'episode' => (bool)$tvshow, // bool
+			'episode' => $tvshow, // bool
 			'source' => 'Torrentdownload' // string|null
 		);
 

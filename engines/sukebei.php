@@ -99,19 +99,19 @@ function process_sukebei($data, $query, $query_filter) {
 			'leechers' => (int)$leechers, // int
 			'filesize' => (int)$filesize, // int
 			// Optional
-			'verified_uploader' => (string)$verified, // string|null
+			'verified_uploader' => $verified, // string|null
 			'nsfw' => true, // bool
-			'quality' => (string)$quality, // string|null
+			'quality' => $quality, // string|null
 			'type' => null, // string|null
-			'audio' => (string)$audio, // string|null
+			'audio' => $audio, // string|null
 			'runtime' => null, // int(timestamp)|null
 			'year' => null, // int(4)|null
-			'timestamp' => (int)$timestamp, // int(timestamp)|null
-			'category' => (string)$category, // string|null
+			'timestamp' => $timestamp, // int(timestamp)|null
+			'category' => $category, // string|null
 			'imdb_id' => null, // string|null
 			'mpa_rating' => null, // string|null
 			'language' => null, // string|null
-			'episode' => (bool)$tvshow, // bool
+			'episode' => $tvshow, // bool
 			'source' => 'Sukebei.nyaa.si' // string|null
 		);
 
