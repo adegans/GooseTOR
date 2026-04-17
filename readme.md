@@ -34,3 +34,8 @@ GooseTOR supports [GooseRSS](https://github.com/adegans/gooseRSS), if you've ena
 
 In config.php you can enable support for Transmission Web. This sets up a special link to add clicked results directly to Transmission Web. Normally if you'd click a result the magnet link in it triggers your *local* Torrent Client to start downloading the content. With Transmission Web support enabled GooseTOR quickly negotiates a connection with it and adds the magnet to it. This briefly opens a popup/tab and on modern browsers should also close that tab after a second or two.  
 This process, other than the initial setup is completely automated for the highest ease of use.
+
+## Is GooseTOR useful for you?
+
+If you find GooseTOR useful and want to help out, please consider a small [token of thanks](https://www.arnan.me/donate/)!  
+Your donations will help as motivation. Thank you for your support!  
