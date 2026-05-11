@@ -33,8 +33,9 @@ function process_thepiratebay($data, $query, $query_filter) {
 	foreach($data as $result) {
 		// Find data
 		$title = sanitize($result['name']);
-		$hash = strtolower(sanitize($result['info_hash']));
-		$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title);
+		$hash = strtoupper(sanitize($result['info_hash']));
+//		$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title);
+		$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title).'&tr='.implode('&tr=', torrent_trackers());
 		$seeders = sanitize($result['seeders']);
 		$leechers = sanitize($result['leechers']);
 		$filesize = sanitize($result['size']);
@@ -138,8 +139,9 @@ function process_thepiratebay_boxoffice($data) {
 	$engine_temp = array();
 	foreach($data as $result) {
 		$title = sanitize($result['name']);
-		$hash = strtolower(sanitize($result['info_hash']));
-		$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title);
+		$hash = strtoupper(sanitize($result['info_hash']));
+//		$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title);
+		$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title).'&tr='.implode('&tr=', torrent_trackers());
 		$seeders = sanitize($result['seeders']);
 		$leechers = sanitize($result['leechers']);
 		$filesize = sanitize($result['size']);

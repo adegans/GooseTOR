@@ -36,6 +36,5 @@ In config.php you can enable support for Transmission Web. This sets up a specia
 This process, other than the initial setup is completely automated for the highest ease of use.
 
 ## Is GooseTOR useful for you?
-
 If you find GooseTOR useful and want to help out, please consider a small [token of thanks](https://www.arnan.me/donate/)!  
 Your donations will help as motivation. Thank you for your support!  

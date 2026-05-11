@@ -31,9 +31,9 @@ function process_eztv($data, $query) {
 	foreach($data['torrents'] as $result) {
 		// Find data
 		$title = sanitize($result['title']);
-		$hash = strtolower(sanitize($result['hash']));
-//		$magnet = sanitize($result['magnet_url']);
-		$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title);
+		$hash = strtoupper(sanitize($result['hash']));
+		$magnet = sanitize($result['magnet_url']);
+//		$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title);
 		$seeders = sanitize($result['seeds']);
 		$leechers = sanitize($result['peers']);
 		$filesize = sanitize($result['size_bytes']);

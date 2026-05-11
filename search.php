@@ -86,7 +86,7 @@ check_config();
 		<?php
 		// Load search script
 		require_once(MAIN_PATH . '/functions/search-engine.php');
-	   	$search_results = search_request('boxoffice', array(), true);
+	   	$search_results = search_request('boxoffice_page_boxoffice');
 	   	$search_results['boxoffice_yts'] = array_slice($search_results['boxoffice_yts'], 0, 12);
 		?>
 
@@ -101,7 +101,7 @@ check_config();
 				echo "	</div>";
 	
 				// HTML for popup
-				echo highlight_popup($highlight);
+				echo highlight_popup($highlight, $colorscheme);
 	
 				echo "</div>";
 	
@@ -109,6 +109,7 @@ check_config();
 			}
 			unset($search_results);
 			?>
+			<div class="col-12"><center><a href="<?php echo MAIN_URL; ?>/boxoffice.php?access=<?php echo $access_key; ?>&c=<?php echo $colorscheme;?>" title="Boxoffice">More Boxoffice results</a></center></div>
 		</div>
 	</section>
 </main>

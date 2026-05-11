@@ -33,16 +33,17 @@ function process_torrentdownload($data, $query, $query_filter) {
 		$title = sanitize($xpath->evaluate("string(.//td[1]/div[@class='tt-name']/a)", $result));
 		$meta = sanitize($xpath->evaluate("string(.//td[1]/div[@class='tt-name']/a/@href)", $result));
 		$meta = explode('/', $meta); // [0] should be empty, [1] = hash, [2] = encoded title/name
-		$hash = $meta[1];
+		$hash = strtoupper($meta[1]);
 
 		// Skip broken results
 		if(empty($title)) continue;
 		if(empty($hash)) continue;
 
-		$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title);
+//		$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title);
+		$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title).'&tr='.implode('&tr=', torrent_trackers());
 		$seeders = sanitize($xpath->evaluate("string(.//td[4])", $result));
 		$leechers = sanitize($xpath->evaluate("string(.//td[5])", $result));
-		$filesize = filesize_to_bytes(strtr(sanitize($xpath->evaluate("string(.//td[3])", $result)), $units));
+		$filesize = sanitize($xpath->evaluate("string(.//td[3])", $result));
 		// Find optional data
 		$category = sanitize($xpath->evaluate("string(.//td[1]/div[@class='tt-name']/span)", $result));
 
@@ -53,6 +54,8 @@ function process_torrentdownload($data, $query, $query_filter) {
 		// Ignore results with 0 seeders?
 		if(SKIP_NO_SEEDERS === true AND $seeders == 0) continue;
 
+		// Process data
+		$filesize = filesize_to_bytes(strtr($filesize, $units));
 		$tvshow = is_tvshow($title);
 		$nsfw = (detect_nsfw($title)) ? true : false;
 

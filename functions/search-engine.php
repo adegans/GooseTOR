@@ -205,7 +205,7 @@ function make_request($query, $query_filter, $boxoffice) {
 		'nsfw' => array('sukebei'), // Engines that only have NSFW content
 		'imdb' => array('eztv') // Engines that only accept IMDb IDs as a query
 	);
-		
+
 	// Initialize the multi-cURL handle
 	$mh = curl_multi_init();
 	

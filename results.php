@@ -135,7 +135,7 @@ check_config();
 			// Search results
 			foreach($search_results['items'] as $hash => $result) {
 				// Extra data
-				$base = $meta = array();
+				$base = $meta = $download = array();
 				if(!empty($result['verified_uploader'])) {
 					$icon = ($result['verified_uploader'] == 'yes') ? 'magnet-verified' : 'magnet-not-verified';
 					$base[] = "<a onclick=\"openpopup('info-torrentverified')\" title=\"".$icon." - Click for more information\"><span class=\"".$icon."\"></span></a>";
@@ -160,12 +160,17 @@ check_config();
 				if(!empty($result['quality'])) $meta[] = "<strong>Quality:</strong> ".$result['quality'];
 				if(!empty($result['type'])) $meta[] = "<strong>Type:</strong> ".$result['type'];
 				if(!empty($result['audio'])) $meta[] = "<strong>Audio:</strong> ".$result['audio'];
-	
+
+
+
 				// Put result together
 				echo "<article class=\"result magnet id-".$hash."\">";
-				if(!empty(TRANSMISSION_WEB)) {
-					echo "	<h2><a href=\"".MAIN_URL."/transmission.php?access=".$access_key."&hash=".$hash."\" target=\"_blank\" title=\"Add to Transmission Web\">".stripslashes($result['title'])."</a></h2>";
-					echo "	<h3>Add to local app: <a href=\"".$result['magnet']."\" title=\"Add magnet to Torrent App\">".stripslashes($result['title'])."</a></h3>";
+				if(!empty(TORRENT_REMOTE) AND TORRENT_REMOTE_PRIMARY) {
+					echo "	<h2><a href=\"".MAIN_URL."/remote.php?access=".$access_key."&hash=".$hash."\" target=\"_blank\" title=\"Add to remote client\">".stripslashes($result['title'])."</a></h2>";
+					echo "	<h3><span class=\"magnet-internal\"></span> <a href=\"".$result['magnet']."\" title=\"Add magnet to Torrent App\">".stripslashes($result['title'])."</a></h3>";
+				} else if(!empty(TORRENT_REMOTE) AND !TORRENT_REMOTE_PRIMARY) {
+					echo "	<h2><a href=\"".$result['magnet']."\" title=\"Add magnet to Torrent App\">".stripslashes($result['title'])."</a></h2>";
+					echo "	<h3><span class=\"magnet-external\"></span> <a href=\"".MAIN_URL."/remote.php?access=".$access_key."&hash=".$hash."\" target=\"_blank\" title=\"Add to remote client\">".stripslashes($result['title'])."</a></h3>";
 				} else {
 					echo "	<h2><a href=\"".$result['magnet']."\" title=\"Add magnet to Torrent App\">".stripslashes($result['title'])."</a></h2>";
 				}

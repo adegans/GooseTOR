@@ -92,8 +92,10 @@ function cache_delete($folder) {
 					continue;
 				}
 	
+				$content = unserialize(file_get_contents($folder.'/'.$file));
+
 				// Delete old and orphaned cache files
-				if(filemtime($folder.'/'.$file) < $cache_ttl) {
+				if($content["created"] < $cache_ttl) {
 					@unlink($folder.'/'.$file);
 
 					if(SUCCESS_LOG) logger('CACHE: Deleted file ' . $file . '.', false);
@@ -415,17 +417,52 @@ function movie_mpa_rating($rating) {
 	return $rating;
 }
 
+// Add trackers to magnet links that have none
+function torrent_trackers() {
+	// Keep at-least 5
+	return array(
+		'udp://tracker.coppersurfer.tk:6969',
+		'udp://tracker.leechers-paradise.org:6969',
+		'udp://p4p.arenabg.ch:1337',
+		'udp://tracker.internetwarriors.net:1337',
+		'udp://glotorrents.pw:6969/announce',
+		'udp://torrent.gresille.org:80/announce',
+		'udp://tracker.openbittorrent.com:80',
+		'http://nyaa.tracker.wf:7777/announce',
+		'udp://tracker.opentrackr.org:1337/announce',
+		'udp://exodus.desync.com:6969/announce',
+		'udp://tracker.torrent.eu.org:451/announce',
+		'udp://opentracker.i2p.rocks:6969/announce',
+		'udp://open.demonii.com:1337/announce',
+		'udp://open.stealth.si:80/announce',
+		'udp://tracker.moeking.me:6969/announce',
+		'udp://explodie.org:6969/announce',
+		'udp://tracker1.bt.moack.co.kr:80/announce',
+		'udp://tracker.theoks.net:6969/announce',
+		'udp://tracker-udp.gbitt.info:80/announce',
+		'https://tracker.tamersunion.org:443/announce',
+		'https://tracker.gbitt.info:443/announce',
+		'udp://tracker.tiny-vps.com:6969/announce',
+		'udp://tracker.dump.cl:6969/announce',
+		'udp://tamas3.ynh.fr:6969/announce',
+		'udp://retracker01-msk-virt.corbina.net:80/announce',
+		'udp://open.free-tracker.ga:6969/announce',
+		'udp://epider.me:6969/announce',
+		'udp://bt2.archive.org:6969/announce',
+	);
+}
+
 /* ------------------------------------------------------------------------ */
 /* MAGNET POPUP FOR MOVIES AND TV-SHOWS										*/
 /* ------------------------------------------------------------------------ */
-function highlight_popup($highlight) {
+function highlight_popup($highlight, $colorscheme) {
 	$meta = $magnet_meta = array();
 
 	$search_query = urlencode($highlight['title']." ".$highlight['year']);
 	$thumb = (!empty($highlight['thumbnail'])) ? $highlight['thumbnail'] : MAIN_URL.'/assets/images/goosetor-small.webp';
 
 	if(isset($highlight['category'])) $meta[] = "<strong>Genre:</strong> ".$highlight['category'];
-	if(isset($highlight['language'])) $meta[] = "<strong>Language:</strong> ".get_language($highlight['language']);
+	if(isset($highlight['language'])) $meta[] = "<strong>Language:</strong> ".$highlight['language'];
 	if(isset($highlight['year'])) $meta[] = "<strong>Released:</strong> ".$highlight['year'];
 	if(isset($highlight['rating'])) $meta[] = "<strong>Rating:</strong> ".movie_star_rating($highlight['rating'])." <small>(".$highlight['rating']." / 10)</small>";
 	if(isset($highlight['mpa_rating'])) $meta[] = "<strong>MPA Rating:</strong> ".movie_mpa_rating($highlight['mpa_rating']);
@@ -436,7 +473,7 @@ function highlight_popup($highlight) {
 	if(!empty($meta)) {
 		$output .= implode('<br />', $meta);
 	}
-	$output .= "	<br /><br /><a href=\"https://www.imdb.com/title/".$highlight['imdb_id']."/\" target=\"_blank\" title=\"View on imdb.com\">View on imdb.com</a> &bull; <a href=\"".MAIN_URL."/results.php?access=".ACCESS."&q=".$search_query."\" title=\"Search on GooseTOR! For new additions results may be limited.\">Find more Magnet links</a>";
+	$output .= "	<br /><br /><a href=\"https://www.imdb.com/title/".$highlight['imdb_id']."/\" target=\"_blank\" title=\"View on imdb.com\">View on imdb.com</a> &bull; <a href=\"".MAIN_URL."/results.php?access=".ACCESS."&q=".$search_query."&c=".$colorscheme."\" title=\"Search on GooseTOR! For new additions results may be limited.\">Find more Magnet links</a>";
 	$output .= "</p>";
 	unset($meta);
 
@@ -449,7 +486,7 @@ function highlight_popup($highlight) {
 		if(isset($magnet['audio'])) $magnet_meta[] = $magnet['audio'];
 		if(isset($magnet['type'])) $magnet_meta[] = $magnet['type'];
 		$magnet_meta[] = human_filesize($magnet['filesize']);
-		$magnet_link = (!empty(TRANSMISSION_WEB)) ? "window.open('".MAIN_URL."/transmission.php?access=".ACCESS."&hash=".$magnet['hash']."', '_blank');" : "location.href='".$magnet['magnet']."'";
+		$magnet_link = (!empty(TORRENT_REMOTE)) ? "window.open('".MAIN_URL."/remote.php?access=".ACCESS."&hash=".$magnet['hash']."', '_blank');" : "location.href='".$magnet['magnet']."'";
 
 		$output .= "<button class=\"download-button\" onclick=\"".$magnet_link."\">".implode(' / ', $magnet_meta)."</button>";
 		unset($magnet_meta);
@@ -465,21 +502,12 @@ function highlight_popup($highlight) {
 }
 
 /* ------------------------------------------------------------------------ */
-/* RETURN THE LANGUAGE BASED ON THE ISO NAME								*/
-/* ------------------------------------------------------------------------ */
-function get_language($string) {
-	$languages = array("ab" => "Abkhaz", "aa" => "Afar", "af" => "Afrikaans", "ak" => "Akan", "sq" => "Albanian", "am" => "Amharic", "ar" => "Arabic", "an" => "Aragonese", "hy" => "Armenian", "as" => "Assamese", "av" => "Avaric", "ae" => "Avestan", "ay" => "Aymara", "az" => "Azerbaijani", "bm" => "Bambara", "ba" => "Bashkir", "eu" => "Basque", "be" => "Belarusian", "bn" => "Bengali", "bh" => "Bihari", "bi" => "Bislama", "bs" => "Bosnian", "br" => "Breton", "bg" => "Bulgarian", "my" => "Burmese", "ca" => "Catalan", "ch" => "Chamorro", "ce" => "Chechen", "ny" => "Nyanja", "zh" => "Chinese", "cn" => "Chinese", "cv" => "Chuvash", "kw" => "Cornish", "co" => "Corsican", "cr" => "Cree", "hr" => "Croatian", "cs" => "Czech", "da" => "Danish", "dv" => "Maldivian;", "nl" => "Dutch", "en" => "English", "eo" => "Esperanto", "et" => "Estonian", "ee" => "Ewe", "fo" => "Faroese", "fj" => "Fijian", "fi" => "Finnish", "fr" => "French", "ff" => "Fulah", "gl" => "Galician", "ka" => "Georgian", "de" => "German", "el" => "Greek, Modern", "gn" => "Guaraní", "gu" => "Gujarati", "ht" => "Haitian Creole", "ha" => "Hausa", "he" => "Hebrew (modern)", "hz" => "Herero", "hi" => "Hindi", "ho" => "Hiri Motu", "hu" => "Hungarian", "ia" => "Interlingua", "id" => "Indonesian", "ie" => "Interlingue", "ga" => "Irish", "ig" => "Igbo", "ik" => "Inupiaq", "io" => "Ido", "is" => "Icelandic", "it" => "Italian", "iu" => "Inuktitut", "ja" => "Japanese", "jv" => "Javanese", "kl" => "Kalaallisut", "kn" => "Kannada", "kr" => "Kanuri", "ks" => "Kashmiri", "kk" => "Kazakh", "km" => "Khmer", "ki" => "Kikuyu", "rw" => "Kinyarwanda", "ky" => "Kirghiz, Kyrgyz", "kv" => "Komi", "kg" => "Kongo", "ko" => "Korean", "ku" => "Kurdish", "kj" => "Kwanyama", "la" => "Latin", "lb" => "Luxembourgish", "lg" => "Luganda", "li" => "Limburgish, Limburgan, Limburger", "ln" => "Lingala", "lo" => "Lao", "lt" => "Lithuanian", "lu" => "Luba-Katanga", "lv" => "Latvian", "gv" => "Manx", "mk" => "Macedonian", "mg" => "Malagasy", "ms" => "Malay", "ml" => "Malayalam", "mt" => "Maltese", "mi" => "Māori", "mr" => "Marathi", "mh" => "Marshallese", "mn" => "Mongolian", "na" => "Nauru", "nv" => "Navajo, Navaho", "nb" => "Norwegian Bokmål", "nd" => "North Ndebele", "ne" => "Nepali", "ng" => "Ndonga", "nn" => "Norwegian Nynorsk", "no" => "Norwegian", "ii" => "Nuosu", "nr" => "South Ndebele", "oc" => "Occitan", "oj" => "Ojibwe, Ojibwa", "cu" => "Old Slavonic", "om" => "Oromo", "or" => "Oriya", "os" => "Ossetian", "pa" => "Punjabi", "pi" => "Pāli", "fa" => "Persian", "pl" => "Polish", "ps" => "Pashto, Pushto", "pt" => "Portuguese", "qu" => "Quechua", "rm" => "Romansh", "rn" => "Kirundi", "ro" => "Romanian", "ru" => "Russian", "sa" => "Sanskrit", "sc" => "Sardinian", "sd" => "Sindhi", "se" => "Northern Sami", "sm" => "Samoan", "sg" => "Sango", "sr" => "Serbian", "gd" => "Gaelic", "sn" => "Shona", "si" => "Sinhala", "sk" => "Slovak", "sl" => "Slovene", "so" => "Somali", "st" => "Southern Sotho", "es" => "Spanish", "su" => "Sundanese", "sw" => "Swahili", "ss" => "Swati", "sv" => "Swedish", "ta" => "Tamil", "te" => "Telugu", "tg" => "Tajik", "th" => "Thai", "ti" => "Tigrinya", "bo" => "Tibetan Standard, Tibetan, Central", "tk" => "Turkmen", "tl" => "Tagalog", "tn" => "Tswana", "to" => "Tonga", "tr" => "Turkish", "ts" => "Tsonga", "tt" => "Tatar", "tw" => "Twi", "ty" => "Tahitian", "ug" => "Uighur, Uyghur", "uk" => "Ukrainian", "ur" => "Urdu", "uz" => "Uzbek", "ve" => "Venda", "vi" => "Vietnamese", "vo" => "Volapük", "wa" => "Walloon", "cy" => "Welsh", "wo" => "Wolof", "fy" => "Western Frisian", "xh" => "Xhosa", "yi" => "Yiddish", "yo" => "Yoruba", "za" => "Zhuang, Chuang");
-
-	return $languages[$string];
-}
-
-/* ------------------------------------------------------------------------ */
 /* SET CURL OPTIONS FOR EACH REQUEST/HANDLE									*/
 /* ------------------------------------------------------------------------ */
 function curl_options($url) {
  	// Define headers
 	$headers = array(
-		"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+		"User-Agent: ".USER_AGENT,
 		"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
 		"Accept-Language: en-US,en;q=0.5",
 //		"Accept-Encoding: gzip, deflate, br, zstd",

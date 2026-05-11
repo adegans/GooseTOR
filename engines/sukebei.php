@@ -37,11 +37,11 @@ function process_sukebei($data, $query, $query_filter) {
 		if(empty($magnet)) continue;
 
 		parse_str(parse_url($magnet, PHP_URL_QUERY), $hash_parameters);
-		$hash = strtolower(str_replace('urn:btih:', '', $hash_parameters['xt']));
-		$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title);
+		$hash = strtoupper(str_replace('urn:btih:', '', $hash_parameters['xt']));
+//		$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title);
 		$seeders = sanitize($xpath->evaluate("string(.//td[6])", $result));
 		$leechers = sanitize($xpath->evaluate("string(.//td[7])", $result));
-		$filesize = filesize_to_bytes(strtr(sanitize($xpath->evaluate("string(.//td[4])", $result)), $units));
+		$filesize = sanitize($xpath->evaluate("string(.//td[4])", $result));
 		// Get optional data
 		$verified = sanitize($xpath->evaluate("string(./@class)", $result));
 		$category = sanitize($xpath->evaluate("string(.//td[1]//a/@href)", $result));
@@ -55,6 +55,7 @@ function process_sukebei($data, $query, $query_filter) {
 		if(SKIP_NO_SEEDERS === true AND $seeders == 0) continue;
 
 		// Process data
+		$filesize = filesize_to_bytes(strtr($filesize, $units));
 		$timestamp = (strlen($timestamp) > 0) ? sanitize($timestamp) : null;
 		$tvshow = is_tvshow($title);
 		if($tvshow === true AND !is_season_or_episode($query, $title)) continue;

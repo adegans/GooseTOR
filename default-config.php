@@ -38,12 +38,16 @@ define('SKIP_NO_SEEDERS', true); // default: true
 define('GOOSERSS', 'https://example.com/gooserss');
 define('GOOSERSS_ACCESS', '1234-2468-1357');
 
-// If you have Transmission Web enabled on a computer (server) elsewhere on your network, enter the basic url below, including the port number.
-// Example: http://192.168.0.10:9091 or http://computer.local:9091
-// Transmission web uses the Authorization header with 'basic' auth. Your username and password will be used for that, which will be base64 encoded.
-// If you don't want this feature, set both values to false.
-define('TRANSMISSION_WEB', 'http://computer.local:9091');
-define('TRANSMISSION_ACCESS', 'username:password');
+// If you have a remote torrent client, like Transmission Web or Qbittorrent Web UI enabled on a computer (server) elsewhere on your network.
+// If you don't want this feature, set TORRENT_REMOTE value to false (without quotes).
+// Possible values: For Transmission use 'tm', for Qbittorrent use `qbit`.
+define('TORRENT_REMOTE', 'qbittorrent');
+// For the url enter the basic address with the port number. Example: http://192.168.0.10:9091 or http://computer.local:8080
+define('TORRENT_REMOTE_URL', 'http://computer.local:8080');
+// You need to use a login. Enter the username and password as one string, separated with a colon (:) Example: username:password.
+define('TORRENT_REMOTE_ACCESS', 'username:password');
+// Should the remote link be the primary download link in results?
+define('TORRENT_REMOTE_PRIMARY', false);
 
 // Where to keep the cache (without a trailing slash).
 define('CACHE_DIR', '/cache'); // default: /cache

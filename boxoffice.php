@@ -28,7 +28,6 @@ if(empty($access_key) OR $access_key !== trim(ACCESS)) {
 // Process url arguments
 $query = isset($_GET['q']) ? sanitize($_GET['q']) : '';
 $colorscheme = (isset($_GET['c']) AND $_GET['c'] === 'dark') ? 'dark' : 'light';
-$target_blank = (!empty(TRANSMISSION_WEB)) ? " target=\"_blank\"" : "";
 
 // Make sure certain files and folders exist and clean up cache
 check_config();
@@ -95,7 +94,7 @@ check_config();
 	<?php
 	// Load search script
 	require_once(MAIN_PATH . '/functions/search-engine.php');
-   	$search_results = search_request('boxoffice_page_boxoffice', false);
+   	$search_results = search_request('boxoffice_page_boxoffice');
 	?>
 
 	<h2>The Box Office</h2>
@@ -113,7 +112,7 @@ check_config();
 			echo "	<span><center><a onclick=\"openpopup('highlight-".$highlight['id']."')\" title=\"More info: ".$highlight['title']."\">".$highlight['title']."</a></center></span>";
 
 			// HTML for popup
-			echo highlight_popup($highlight);
+			echo highlight_popup($highlight, $colorscheme);
 
 			echo "</div>";
 
@@ -129,7 +128,7 @@ check_config();
 			<ol>
 			<?php
 			foreach($search_results['boxoffice_thepiratebay'] as $highlight) {
-				$magnet_link = (!empty(TRANSMISSION_WEB)) ? "window.open('".MAIN_URL."/transmission.php?access=".ACCESS."&hash=".$highlight['hash']."', '_blank');" : "location.href='".$highlight['magnet']."'";
+				$magnet_link = (!empty(TORRENT_REMOTE)) ? "window.open('".MAIN_URL."/remote.php?access=".ACCESS."&hash=".$highlight['hash']."', '_blank');" : "location.href='".$highlight['magnet']."'";
 
 				echo "<li class=\"result tpb id-".$highlight['id']."\">";
 				echo "	<h2><a onclick=\"".$magnet_link."\">".stripslashes($highlight['name'])."</a></h2>";
@@ -147,7 +146,7 @@ check_config();
 			<ol>
 			<?php
 			foreach($search_results['boxoffice_nyaa'] as $highlight) {
-				$magnet_link = (!empty(TRANSMISSION_WEB)) ? "window.open('".MAIN_URL."/transmission.php?access=".ACCESS."&hash=".$highlight['hash']."', '_blank');" : "location.href='".$highlight['magnet']."'";
+				$magnet_link = (!empty(TORRENT_REMOTE)) ? "window.open('".MAIN_URL."/remote.php?access=".ACCESS."&hash=".$highlight['hash']."', '_blank');" : "location.href='".$highlight['magnet']."'";
 
 				echo "<li class=\"result nyaa id-".$highlight['id']."\">";
 				echo "	<h2><a onclick=\"".$magnet_link."\">".stripslashes($highlight['name'])."</a></h2>";

@@ -23,6 +23,7 @@ function process_limetorrent($data, $query, $query_filter) {
 	}
 
 	$categories = lime_cats();
+	$units = array('TiB' => 'TB', 'GiB' => 'GB', 'MiB' => 'MB', 'KiB' => 'KB');
 
 	$engine_temp = array();
 	foreach($scrape as $result) {
@@ -35,8 +36,9 @@ function process_limetorrent($data, $query, $query_filter) {
 		if(empty($hash)) continue;
 
 		$hash = explode('/', substr($hash, 0, strpos($hash, '.torrent?')));
-		$hash = strtolower($hash[array_key_last($hash)]);
-		$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title);
+		$hash = strtoupper($hash[array_key_last($hash)]);
+//		$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title);
+		$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title).'&tr='.implode('&tr=', torrent_trackers());
 		$seeders = sanitize($xpath->evaluate("string(.//td[@class='tdseed'])", $result));
 		$leechers = sanitize($xpath->evaluate("string(.//td[@class='tdleech'])", $result));
 		$filesize = sanitize($xpath->evaluate("string(.//td[@class='tdnormal'][2])", $result));
@@ -52,6 +54,7 @@ function process_limetorrent($data, $query, $query_filter) {
 		if(SKIP_NO_SEEDERS === true AND $seeders == 0) continue;
 
 		// Process data
+		$filesize = filesize_to_bytes(strtr($filesize, $units));
 		$tvshow = is_tvshow($title);
 		if($tvshow === true AND !is_season_or_episode($query, $title)) continue;
 		$nsfw = (detect_nsfw($title)) ? true : false;

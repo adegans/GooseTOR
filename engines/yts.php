@@ -43,7 +43,7 @@ function process_yts($data, $query_filter) {
 		if(is_array($category)) {
 			// Maybe block these categories
 			if(count(array_uintersect($category, YTS_CATEGORIES, 'strcasecmp')) > 0) continue;
-			if($query_filter['anime'] === false AND count(array_uintersect($category, 'animation', 'strcasecmp')) > 0) continue;
+			if($query_filter['anime'] === false AND count(array_uintersect($category, array('animation'), 'strcasecmp')) > 0) continue;
 
 			// Set category for results
 			$category = sanitize(implode(', ', $category));
@@ -51,8 +51,9 @@ function process_yts($data, $query_filter) {
 
 		foreach($result['torrents'] as $download) {
 			// Find data
-			$hash = strtolower(sanitize($download['hash']));
-			$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title);
+			$hash = strtoupper(sanitize($download['hash']));
+//			$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title);
+			$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title).'&tr='.implode('&tr=', torrent_trackers());
 			$seeders = sanitize($download['seeds']);
 			$leechers = sanitize($download['peers']);
 			$filesize = filesize_to_bytes(sanitize($download['size']));
@@ -149,8 +150,9 @@ function process_yts_boxoffice($data) {
 		}
 
 		foreach($result['torrents'] as $download) {
-			$hash = strtolower(sanitize($download['hash']));
-			$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title);
+			$hash = strtoupper(sanitize($download['hash']));
+//			$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title);
+			$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title).'&tr='.implode('&tr=', torrent_trackers());
 			$filesize = filesize_to_bytes(sanitize($download['size']));
 
 			$type = (!empty($download['type'])) ? sanitize(strtolower($download['type'])) : null;

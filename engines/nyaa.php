@@ -37,11 +37,11 @@ function process_nyaa($data, $query, $query_filter) {
 		if(empty($magnet)) continue;
 
 		parse_str(parse_url($magnet, PHP_URL_QUERY), $hash_parameters);
-		$hash = strtolower(str_replace('urn:btih:', '', $hash_parameters['xt']));
-		$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title);
+		$hash = strtoupper(str_replace('urn:btih:', '', $hash_parameters['xt']));
+//		$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title);
 		$seeders = sanitize($xpath->evaluate("string(.//td[6])", $result));
 		$leechers = sanitize($xpath->evaluate("string(.//td[7])", $result));
-		$filesize = filesize_to_bytes(strtr(sanitize($xpath->evaluate("string(.//td[4])", $result)), $units));
+		$filesize = sanitize($xpath->evaluate("string(.//td[4])", $result));
 		// Get optional data
 		$verified = sanitize($xpath->evaluate("string(./@class)", $result));
 		$category = sanitize($xpath->evaluate("string(.//td[1]//a/@href)", $result));
@@ -55,6 +55,7 @@ function process_nyaa($data, $query, $query_filter) {
 		if(SKIP_NO_SEEDERS === true AND $seeders == 0) continue;
 
 		// Process data
+		$filesize = filesize_to_bytes(strtr($filesize, $units));
 		$timestamp = (strlen($timestamp) > 0) ? sanitize($timestamp) : null;
 		$tvshow = is_tvshow($title);
 		if($tvshow === true AND !is_season_or_episode($query, $title)) continue;
@@ -145,26 +146,26 @@ function process_nyaa_boxoffice($data) {
 
 	$engine_temp = array();
 	foreach($scrape as $result) {
-		$meta = $xpath->evaluate(".//td[@class='text-center']", $result);
+		// Find data
+		$title = sanitize($xpath->evaluate("string(.//td[2]//a[not(contains(@class, 'comments'))]/@title)", $result));
+		$magnet = sanitize($xpath->evaluate("string(.//td[3]//a[2]/@href)", $result));
+		if(empty($magnet)) $magnet = sanitize($xpath->evaluate("string(.//td[3]//a/@href)", $result)); // This matches if no torrent file is provided
 
-		$name = $xpath->evaluate(".//td[@colspan='2']//a[not(contains(@class, 'comments'))]/@title", $result);
-		if($name->length == 0) continue;
+		// Skip broken results
+		if(empty($title)) continue;
+		if(empty($magnet)) continue;
 
-		$magnet = $xpath->evaluate(".//a[2]/@href", $meta[0]);
-		if($magnet->length == 0) $magnet = $xpath->evaluate(".//a/@href", $meta[0]);
-		if($magnet->length == 0) continue;
-
-		$title = sanitize($name[0]->textContent);
-		$magnet = sanitize($magnet[0]->textContent);
 		parse_str(parse_url($magnet, PHP_URL_QUERY), $hash_parameters);
-		$hash = strtolower(str_replace('urn:btih:', '', $hash_parameters['xt']));
-		$seeders = sanitize($meta[3]->textContent);
-		$leechers = sanitize($meta[4]->textContent);
-		$filesize = filesize_to_bytes(strtr(sanitize($xpath->evaluate("string(.//td[@class='text-center'][1])", $result)), $units));
-		$category = sanitize($xpath->evaluate(".//td[1]//a/@title", $result)[0]->textContent);
+		$hash = strtoupper(str_replace('urn:btih:', '', $hash_parameters['xt']));
+//		$magnet = 'magnet:?xt=urn:btih:'.$hash.'&dn='.urlencode($title);
+		$seeders = sanitize($xpath->evaluate("string(.//td[6])", $result));
+		$leechers = sanitize($xpath->evaluate("string(.//td[7])", $result));
+		$filesize = sanitize($xpath->evaluate("string(.//td[4])", $result));
+		$category = sanitize($xpath->evaluate("string(.//td[1]//a/@href)", $result));
 		$category = str_replace(' - ', '/', $category);
 
 		$result_id = md5($title);
+		$filesize = filesize_to_bytes(strtr($filesize, $units));
 
 		$engine_temp[] = array(
 			'id' => (string)$result_id, // Semi random string to separate results
